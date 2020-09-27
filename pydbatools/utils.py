@@ -5,12 +5,13 @@ def make_connection_string(client) -> str:
     """Generate connection string to be used by SQLAlchemy."""
 
     params = urllib.parse.quote_plus(
-        "DRIVER={{{driver}}};SERVER={server};DATABASE={database};UID={UID};PWD={PWD}".format(
+        "DRIVER={{{driver}}};SERVER={server};DATABASE={database};UID={UID};PWD={PWD};trusted_connection={trusted_connection}".format(
             driver=client.driver,
             server=client.server,
-            database=client.initial_catalog,
+            database=client.database,
             UID=client.UID,
             PWD=client.PWD,
+            trusted_connection=client.trusted_connection,
         )
     )
     return params
@@ -21,7 +22,7 @@ def extend_dbs(func):
 
     def wrapper_extend_dbs(client, *args, **kwargs):
         if not kwargs.get("db_type", ""):
-            func(client, *args, db=client.initial_catalog)
+            func(client, *args, db=client.database)
             return None
 
         database_query = """

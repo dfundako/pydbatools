@@ -1,4 +1,4 @@
-from . import exceptions, utils
+from . import utils
 
 from sqlalchemy import create_engine
 
@@ -12,11 +12,12 @@ class SQLClient:
         **kwargs,
     ):
         self.server = server
-        self.initial_catalog = kwargs.get("database", "master")
+        self.database = kwargs.get("database", "master")
         self.UID = kwargs.get("UID", None)
         self.PWD = kwargs.get("PWD", None)
         self.driver = kwargs.get("driver", None)
+        self.trusted_connection = kwargs.get("trusted_connection", "no")
 
-        self.params = utils.make_connection_string(self)
+        self.conn = utils.make_connection_string(self)
 
-        self.engine = create_engine("mssql+pyodbc:///?odbc_connect=%s" % self.params)
+        self.engine = create_engine("mssql+pyodbc:///?odbc_connect=%s" % self.conn)
