@@ -1,2 +1,2 @@
 from .client import SQLClient
-from .api import backup_database
+from .api import dbcc_checkdb
