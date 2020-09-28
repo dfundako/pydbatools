@@ -6,16 +6,13 @@ instance_list = [
         "UID": "sa",
         "PWD": "Password123",
         "driver": "ODBC Driver 17 for SQL Server",
-    },
-    {
-        "server": "other_instance",
-        "database": "my_database",
-        "driver": "SQL Server Native Client 10.0",
-        "trusted_connection": "true",
+        "autocommit": True,
+        "target_dbs": "system",
     },
 ]
 
 for i in instance_list:
     client = pydba.SQLClient(**i)
-
-    pydba.dbcc_checkdb(client, db_type="system")
+    print(client.engine)
+    pydba.dbcc_checkdb(client)
+    pydba.backup_db(client, to_disk_location="/var/opt/mssql/data/")

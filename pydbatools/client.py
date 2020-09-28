@@ -1,5 +1,6 @@
 from . import utils
 
+import pyodbc
 from sqlalchemy import create_engine
 
 
@@ -8,7 +9,7 @@ class SQLClient:
 
     def __init__(
         self,
-        server,
+        server: str,
         **kwargs,
     ):
         self.server = server
@@ -17,7 +18,10 @@ class SQLClient:
         self.PWD = kwargs.get("PWD", None)
         self.driver = kwargs.get("driver", None)
         self.trusted_connection = kwargs.get("trusted_connection", "no")
+        self.target_dbs = kwargs.get("target_dbs", "")
 
-        self.conn = utils.make_connection_string(self)
+        self.connection_str = utils.make_connection_string(self)
 
-        self.engine = create_engine("mssql+pyodbc:///?odbc_connect=%s" % self.conn)
+        self.engine = create_engine(
+            "mssql+pyodbc:///?odbc_connect=%s" % self.connection_str
+        )
